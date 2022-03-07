@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="10dp"
+    android:paddingVertical="10dp"
+    tools:context=".MainActivity"
+    android:orientation="vertical">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:paddingVertical="10dp"
+        android:gravity="center"
+        android:layout_marginBottom="10dp"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/bt_listen"
+            android:layout_width="0dp"
+            android:layout_marginLeft="10dp"
+            android:text="listen"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:background="@drawable/back_bt"
+            android:layout_height="40dp"/>
+
+        <TextView
+            android:id="@+id/bt_listdevice"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="list device"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:background="@drawable/back_bt"
+            android:layout_height="40dp"/>
+
+        <TextView
+            android:id="@+id/txt_status"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="status"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="18dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/iran_sans"/>
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listview_device"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginBottom="20dp"
+        android:background="#DDDDDD"/>
+
+    <TextView
+        android:id="@+id/txt_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Message"
+        android:textSize="25dp"
+        android:fontFamily="@font/iran_sans"
+        android:layout_gravity="center_horizontal"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/bt_send"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:paddingHorizontal="40dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:layout_height="40dp"
+            android:textStyle="bold"
+            android:background="@drawable/back_bt"
+            android:text="send"/>
+
+        <EditText
+            android:id="@+id/editxt_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>
