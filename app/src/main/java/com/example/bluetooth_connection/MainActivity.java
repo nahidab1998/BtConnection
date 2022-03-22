@@ -1,13 +1,20 @@
 package com.example.bluetooth_connection;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -33,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private ListView listView;
     private TextView msg_box , status , not_found;
     private EditText writeMsg ;
-    private String string ,st_message;
+    private String string ,st_message , st_status;
+    private MediaPlayer player;
 
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothDevice[] btArray;
@@ -51,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String APP_NAME = "bluetooth_connection";
     private static final UUID MY_UUID=UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66");
 
+    private final static String default_notification_channel_id = "default" ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent,REQUEST_ENABLE_BLUETOOTH);
+
         }
 
         implementListeners();
@@ -180,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
                 ClientClass clientClass=new ClientClass(btArray[i]);
                 clientClass.start();
 
-                status.setText("Connecting");
+                status.setText("درحال اتصال...");
             }
         });
 
@@ -189,16 +200,19 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 st_message = writeMsg.getText().toString();
+                st_status = status.getText().toString();
 
                 if(TextUtils.isEmpty(st_message)){
-
                     Toast.makeText(MainActivity.this, "پیغام خود را بنویسید", Toast.LENGTH_SHORT).show();
-
                 }else {
-                    string= String.valueOf(writeMsg.getText());
-                    sendReceive.write(string.getBytes());
-                    writeMsg.setText("");
-                    Toast.makeText(MainActivity.this, "ارسال شد", Toast.LENGTH_SHORT).show();
+                    if (st_status == "متصل شد"){
+                        string= String.valueOf(writeMsg.getText());
+                        sendReceive.write(string.getBytes());
+                        writeMsg.setText("");
+                        Toast.makeText(MainActivity.this, "ارسال شد", Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(MainActivity.this, "به دستگاهی متصل نیست", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -212,26 +226,38 @@ public class MainActivity extends AppCompatActivity {
             switch (msg.what)
             {
                 case STATE_LISTENING:
-                    status.setText("Listening...");
+                    status.setText("درحال شناسایی...");
                     break;
                 case STATE_CONNECTING:
-                    status.setText("Connecting...");
+                    status.setText("درحال اتصال...");
                     break;
                 case STATE_CONNECTED:
-                    status.setText("Connected");
-//                    if (status.getText().toString() == "Connected"){
-//
-//                        status.setTextColor(getResources().getColor(R.color.connected));
-//                    }
+                    status.setText("متصل شد");
+//                    status.setTextColor(getResources().getColor(R.color.connected));
+
                     break;
                 case STATE_CONNECTION_FAILED:
-                    status.setText("Connection Failed");
+                    status.setText("ارتباط ناموفق");
 //                    status.setTextColor(getResources().getColor(R.color.connection_failed));
                     break;
                 case STATE_MESSAGE_RECEIVED:
                     byte[] readBuff= (byte[]) msg.obj;
                     String tempMsg=new String(readBuff,0,msg.arg1);
                     msg_box.setText(tempMsg);
+                    player= MediaPlayer.create(MainActivity.this,R.raw.notification);
+                    player.start();
+//                    Uri alarmSound = RingtoneManager. getDefaultUri (RingtoneManager. TYPE_NOTIFICATION);
+//                    NotificationCompat.Builder mBuilder =
+//                            new NotificationCompat.Builder(MainActivity.this,
+//                                    default_notification_channel_id )
+//                                    .setSmallIcon(R.drawable. ic_launcher_foreground )
+//                                    .setVibrate( new long []{ 1000 , 1000 , 1000 , 1000 , 1000 })
+//                                    .setContentTitle( "Test" )
+//                                    .setSound(alarmSound)
+//                                    .setContentText( "Hello! This is my first push notification" ) ;
+//                    NotificationManager mNotificationManager = (NotificationManager)
+//                            getSystemService(Context.NOTIFICATION_SERVICE);
+//                    mNotificationManager.notify(( int ) System. currentTimeMillis (), mBuilder.build());
                     break;
             }
             return true;

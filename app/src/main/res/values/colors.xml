@@ -10,4 +10,5 @@
     <color name="connected">#82d640</color>
     <color name="connection_failed">#ff0103</color>
     <color name="blue">#449fe3</color>
+    <color name="gray">#cccccc</color>
 </resources>
