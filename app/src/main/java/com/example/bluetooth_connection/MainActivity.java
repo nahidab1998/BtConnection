@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,12 +37,13 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView listen , send , listDevices ;
+    private TextView listen , listDevices ;
     private ListView listView;
     private TextView msg_box , status , not_found;
     private EditText writeMsg ;
     private String string ,st_message , st_status;
     private MediaPlayer player;
+    private ImageView send;
 
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothDevice[] btArray;
@@ -177,19 +179,22 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        listen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ServerClass serverClass=new ServerClass();
-                serverClass.start();
-            }
-        });
+//        listen.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                ServerClass serverClass=new ServerClass();
+//                serverClass.start();
+//            }
+//        });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ClientClass clientClass=new ClientClass(btArray[i]);
                 clientClass.start();
+
+                ServerClass serverClass=new ServerClass();
+                serverClass.start();
 
                 status.setText("درحال اتصال...");
             }
@@ -216,7 +221,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     Handler handler=new Handler(new Handler.Callback() {
@@ -244,6 +248,7 @@ public class MainActivity extends AppCompatActivity {
                     byte[] readBuff= (byte[]) msg.obj;
                     String tempMsg=new String(readBuff,0,msg.arg1);
                     msg_box.setText(tempMsg);
+                    msg_box.setTextColor(getResources().getColor(R.color.matn));
                     player= MediaPlayer.create(MainActivity.this,R.raw.notification);
                     player.start();
 //                    Uri alarmSound = RingtoneManager. getDefaultUri (RingtoneManager. TYPE_NOTIFICATION);
@@ -349,7 +354,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void initId() {
-        listen = findViewById(R.id.bt_listen);
+//        listen = findViewById(R.id.bt_listen);
         send = findViewById(R.id.bt_send);
 //        listDevices = findViewById(R.id.bt_listdevice);
         listView = findViewById(R.id.listview_device);
